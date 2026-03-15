@@ -31,23 +31,24 @@ public class DataSourceConfig {
 
         String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + "/" + dbName;
 
+        if (host.endsWith(".railway.internal")) {
+            // 내부 네트워크: SSL 없음
+            log.info("Using internal network (SSL disabled)");
+            jdbcUrl = jdbcUrl + "?sslmode=disable";
+        } else {
+            // 공개 URL: SSL 필요
+            log.info("Using public network (SSL required)");
+            jdbcUrl = jdbcUrl + "?sslmode=require";
+        }
+
         // 디버그용 로그 (비밀번호 제외)
-        log.info("DB connecting → host: {}, port: {}, db: {}, user: {}", host, port, dbName, username);
+        log.info("DB connecting → URL: {}, user: {}", jdbcUrl, username);
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
         config.setUsername(username);
         config.setPassword(password);
         config.setConnectionTimeout(10000);
-
-        if (host.endsWith(".railway.internal")) {
-            // 내부 네트워크: SSL 없음
-            log.info("Using internal network (no SSL)");
-        } else {
-            // 공개 URL: SSL 필요
-            log.info("Using public network (SSL required)");
-            jdbcUrl = jdbcUrl + "?sslmode=require";
-        }
 
         return new HikariDataSource(config);
     }
