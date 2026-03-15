@@ -41,3 +41,8 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// plain jar 비활성화 (Railway에서 bootJar만 실행하도록)
+jar {
+	enabled = false
+}
