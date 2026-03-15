@@ -44,11 +44,9 @@ public class DataSourceConfig {
             // 내부 네트워크: SSL 없음
             log.info("Using internal network (no SSL)");
         } else {
-            // 공개 URL: SSL 필요, 인증서 검증 생략
+            // 공개 URL: SSL 필요
             log.info("Using public network (SSL required)");
-            config.addDataSourceProperty("ssl", "true");
-            config.addDataSourceProperty("sslmode", "require");
-            config.addDataSourceProperty("sslfactory", "org.postgresql.ssl.NonValidatingFactory");
+            jdbcUrl = jdbcUrl + "?sslmode=require";
         }
 
         return new HikariDataSource(config);
