@@ -68,8 +68,8 @@ export default function ProjectEditor() {
     try {
       const url = await uploadImage(file);
       setForm((f) => ({ ...f, thumbnailUrl: url }));
-    } catch (err) {
-      alert('이미지 업로드에 실패했습니다.\n' + String(err));
+    } catch {
+      alert('이미지 업로드에 실패했습니다.');
     } finally {
       setUploading(false);
     }
