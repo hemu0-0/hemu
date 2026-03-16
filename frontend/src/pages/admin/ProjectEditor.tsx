@@ -1,7 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ImagePlus, X } from 'lucide-react';
 import { getProjects, createProject, updateProject } from '../../api/projectApi';
+import { uploadImage } from '../../api/supabase';
 import type { ProjectRequest } from '../../types';
 import Button from '../../components/common/Button';
 
@@ -24,6 +25,8 @@ export default function ProjectEditor() {
   const [form, setForm] = useState<ProjectRequest>(emptyForm);
   const [tagInput, setTagInput] = useState('');
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isEdit) return;
@@ -54,8 +57,23 @@ export default function ProjectEditor() {
     if (e.key === 'Enter') { e.preventDefault(); handleTagBlur(); }
   };
 
-  const set = (key: keyof ProjectRequest) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm((f) => ({ ...f, [key]: e.target.value }));
+  const set = (key: keyof ProjectRequest) =>
+    (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      setForm((f) => ({ ...f, [key]: e.target.value }));
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const url = await uploadImage(file);
+      setForm((f) => ({ ...f, thumbnailUrl: url }));
+    } catch {
+      alert('이미지 업로드에 실패했습니다.');
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -88,9 +106,47 @@ export default function ProjectEditor() {
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {/* 썸네일 업로드 */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">썸네일 이미지</label>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleImageChange}
+          />
+
+          {form.thumbnailUrl ? (
+            <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-gray-100">
+              <img
+                src={form.thumbnailUrl}
+                alt="썸네일 미리보기"
+                className="w-full h-full object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => setForm((f) => ({ ...f, thumbnailUrl: '' }))}
+                className="absolute top-2 right-2 p-1 bg-black/50 text-white rounded-full hover:bg-black/70"
+              >
+                <X size={14} />
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="w-full aspect-video rounded-xl border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-indigo-400 hover:text-indigo-400 transition-colors"
+            >
+              <ImagePlus size={28} />
+              <span className="text-sm">{uploading ? '업로드 중...' : '클릭해서 이미지 선택'}</span>
+            </button>
+          )}
+        </div>
+
         {[
           { label: '제목 *', key: 'title' as const, required: true },
-          { label: '썸네일 URL (선택)', key: 'thumbnailUrl' as const },
           { label: 'GitHub URL (선택)', key: 'githubUrl' as const },
           { label: '데모 URL (선택)', key: 'demoUrl' as const },
           { label: '기간 (선택, ex: 2024.01 ~ 2024.03)', key: 'period' as const },
@@ -152,7 +208,7 @@ export default function ProjectEditor() {
         </div>
 
         <div className="flex gap-3 pt-2">
-          <Button type="submit" disabled={saving}>
+          <Button type="submit" disabled={saving || uploading}>
             {saving ? '저장 중...' : '저장'}
           </Button>
           <Button type="button" variant="secondary" onClick={() => navigate('/admin/dashboard')}>
