@@ -9,53 +9,55 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.sql.DataSource;
-import java.net.URI;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Configuration
 public class DataSourceConfig {
 
     private static final Logger log = LoggerFactory.getLogger(DataSourceConfig.class);
 
+    // postgres(ql)://user:pass@host:port/db  또는  postgres(ql)://host:port/db
+    private static final Pattern DB_URL_PATTERN = Pattern.compile(
+            "(?:postgres(?:ql)?://)(?:([^:@]+):([^@]*)@)?([^/:]+)(?::(\\d+))?/(.+)"
+    );
+
     @Value("${DATABASE_URL}")
     private String databaseUrl;
 
     @Bean
-    public DataSource dataSource() throws Exception {
+    public DataSource dataSource() {
         String host, dbName, username, password;
-        int port;
+        int port = 5432;
 
-        URI uri = new URI(databaseUrl);
-        String userInfo = uri.getUserInfo();
-
-        if (userInfo != null) {
-            // DATABASE_URL에 credentials 포함된 경우
-            String[] parts = userInfo.split(":", 2);
-            username = parts[0];
-            password = parts[1];
-            host = uri.getHost();
-            port = uri.getPort();
-            dbName = uri.getPath().replaceFirst("/", "");
+        Matcher m = DB_URL_PATTERN.matcher(databaseUrl.trim());
+        if (m.matches() && m.group(1) != null) {
+            // DATABASE_URL에 credentials 포함
+            username = m.group(1);
+            password = m.group(2);
+            host = m.group(3);
+            port = m.group(4) != null ? Integer.parseInt(m.group(4)) : 5432;
+            dbName = m.group(5);
+            log.info("Parsed credentials from DATABASE_URL");
         } else {
-            // Railway 개별 환경변수로 fallback
-            log.warn("DATABASE_URL has no userInfo, falling back to PG* env vars");
-            host = System.getenv("PGHOST");
-            port = Integer.parseInt(System.getenv().getOrDefault("PGPORT", "5432"));
-            dbName = System.getenv("PGDATABASE");
-            username = System.getenv("PGUSER");
-            password = System.getenv("PGPASSWORD");
+            // PG* 개별 환경변수 fallback
+            log.warn("DATABASE_URL has no credentials, falling back to PG* env vars");
+            host = getEnv("PGHOST");
+            String pgPort = getEnv("PGPORT");
+            port = (pgPort != null && !pgPort.isEmpty()) ? Integer.parseInt(pgPort) : 5432;
+            dbName = getEnv("PGDATABASE");
+            username = getEnv("PGUSER");
+            password = getEnv("PGPASSWORD");
         }
 
-        String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + "/" + dbName;
-
-        if (host.endsWith(".railway.internal")) {
-            log.info("Using internal network (SSL disabled)");
-            jdbcUrl = jdbcUrl + "?sslmode=disable";
-        } else {
-            log.info("Using public network (SSL required)");
-            jdbcUrl = jdbcUrl + "?sslmode=require";
+        if (host == null) {
+            throw new IllegalStateException("DB host를 확인할 수 없습니다. DATABASE_URL 또는 PGHOST 환경변수를 확인하세요.");
         }
 
-        log.info("DB connecting → URL: {}, user: {}", jdbcUrl, username);
+        String sslMode = host.endsWith(".railway.internal") ? "disable" : "require";
+        String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + "/" + dbName + "?sslmode=" + sslMode;
+
+        log.info("DB connecting → {}, user: {}", jdbcUrl, username);
 
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(jdbcUrl);
@@ -64,5 +66,10 @@ public class DataSourceConfig {
         config.setConnectionTimeout(10000);
 
         return new HikariDataSource(config);
+    }
+
+    private String getEnv(String key) {
+        String val = System.getenv(key);
+        return (val != null && !val.isEmpty()) ? val : null;
     }
 }
