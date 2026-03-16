@@ -5,6 +5,7 @@ const navItems = [
   { to: '/blog', label: 'Blog' },
   { to: '/projects', label: 'Projects' },
   { to: '/about', label: 'About' },
+  { to: '/guestbook', label: 'Guestbook' },
 ];
 
 export default function Header() {

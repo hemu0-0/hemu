@@ -77,9 +77,10 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {projects.map((project) => (
-              <div
+              <Link
                 key={project.id}
-                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow"
+                to={`/projects/${project.id}`}
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-md transition-shadow block"
               >
                 {project.thumbnailUrl && (
                   <img
@@ -92,7 +93,7 @@ export default function Home() {
                   <h3 className="font-semibold text-gray-900 mb-1">{project.title}</h3>
                   <p className="text-gray-500 text-sm line-clamp-2">{project.description}</p>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         )}

@@ -4,7 +4,9 @@ import Home from '../pages/Home';
 import Blog from '../pages/Blog';
 import BlogDetail from '../pages/BlogDetail';
 import Projects from '../pages/Projects';
+import ProjectDetail from '../pages/ProjectDetail';
 import About from '../pages/About';
+import Guestbook from '../pages/Guestbook';
 import AdminLogin from '../pages/admin/AdminLogin';
 import AdminDashboard from '../pages/admin/AdminDashboard';
 import PostEditor from '../pages/admin/PostEditor';
@@ -22,7 +24,9 @@ export default function AppRouter() {
       <Route path="/blog" element={<Blog />} />
       <Route path="/blog/:id" element={<BlogDetail />} />
       <Route path="/projects" element={<Projects />} />
+      <Route path="/projects/:id" element={<ProjectDetail />} />
       <Route path="/about" element={<About />} />
+      <Route path="/guestbook" element={<Guestbook />} />
       <Route path="/admin" element={<AdminLogin />} />
       <Route
         path="/admin/dashboard"

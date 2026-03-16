@@ -22,6 +22,11 @@ public class ProjectController {
         return ResponseEntity.ok(projectService.getProjects());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ProjectResponseDto> getProject(@PathVariable Long id) {
+        return ResponseEntity.ok(projectService.getProject(id));
+    }
+
     @PostMapping
     public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(projectService.createProject(dto));

@@ -24,6 +24,12 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final TagRepository tagRepository;
 
+    public ProjectResponseDto getProject(Long id) {
+        return projectRepository.findById(id)
+                .map(ProjectResponseDto::new)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found: " + id));
+    }
+
     public List<ProjectResponseDto> getProjects() {
         return projectRepository.findAllByOrderByOrderIndexAsc().stream()
                 .map(ProjectResponseDto::new)
@@ -42,6 +48,7 @@ public class ProjectService {
                 .orderIndex(dto.getOrderIndex())
                 .build();
         project.setTags(resolveTags(dto.getTags()));
+        project.setImageUrls(dto.getImageUrls());
         return new ProjectResponseDto(projectRepository.save(project));
     }
 
@@ -50,7 +57,8 @@ public class ProjectService {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found: " + id));
         project.update(dto.getTitle(), dto.getDescription(), dto.getThumbnailUrl(),
-                dto.getGithubUrl(), dto.getDemoUrl(), dto.getPeriod(), dto.getOrderIndex());
+                dto.getGithubUrl(), dto.getDemoUrl(), dto.getPeriod(), dto.getOrderIndex(),
+                dto.getImageUrls());
         project.setTags(resolveTags(dto.getTags()));
         return new ProjectResponseDto(project);
     }

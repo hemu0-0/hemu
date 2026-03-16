@@ -17,6 +17,7 @@ public class ProjectResponseDto {
     private final String period;
     private final Integer orderIndex;
     private final List<String> tags;
+    private final List<String> imageUrls;
 
     public ProjectResponseDto(Project project) {
         this.id = project.getId();
@@ -31,5 +32,6 @@ public class ProjectResponseDto {
                 .map(t -> t.getName())
                 .sorted()
                 .collect(Collectors.toList());
+        this.imageUrls = project.getImageUrls();
     }
 }

@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,6 +44,12 @@ public class Project {
     @Column(name = "order_index")
     private Integer orderIndex = 0;
 
+    @ElementCollection
+    @CollectionTable(name = "project_image", joinColumns = @JoinColumn(name = "project_id"))
+    @Column(name = "image_url", length = 500)
+    @OrderColumn(name = "image_order")
+    private List<String> imageUrls = new ArrayList<>();
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "project_tag",
@@ -67,7 +75,8 @@ public class Project {
     }
 
     public void update(String title, String description, String thumbnailUrl,
-                       String githubUrl, String demoUrl, String period, Integer orderIndex) {
+                       String githubUrl, String demoUrl, String period, Integer orderIndex,
+                       List<String> imageUrls) {
         this.title = title;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
@@ -75,6 +84,11 @@ public class Project {
         this.demoUrl = demoUrl;
         this.period = period;
         this.orderIndex = orderIndex != null ? orderIndex : 0;
+        this.imageUrls = imageUrls != null ? imageUrls : new ArrayList<>();
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls != null ? imageUrls : new ArrayList<>();
     }
 
     public void setTags(Set<Tag> tags) {

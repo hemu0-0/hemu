@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { Github, ExternalLink, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Github, ExternalLink } from 'lucide-react';
 import { getProjects } from '../api/projectApi';
 import type { Project } from '../types';
 import Spinner from '../components/common/Spinner';
@@ -8,7 +9,6 @@ export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [hovered, setHovered] = useState<number | null>(null);
-  const [selected, setSelected] = useState<Project | null>(null);
 
   useEffect(() => {
     getProjects()
@@ -31,12 +31,12 @@ export default function Projects() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project) => (
-            <div
+            <Link
               key={project.id}
-              className="group cursor-pointer"
+              to={`/projects/${project.id}`}
+              className="group cursor-pointer block"
               onMouseEnter={() => setHovered(project.id)}
               onMouseLeave={() => setHovered(null)}
-              onClick={() => setSelected(project)}
             >
               {/* 이미지 영역 */}
               <div className="relative overflow-hidden rounded-2xl bg-gray-100 aspect-video mb-4">
@@ -134,79 +134,8 @@ export default function Projects() {
                   </div>
                 )}
               </div>
-            </div>
+            </Link>
           ))}
-        </div>
-      )}
-
-      {/* 상세 모달 */}
-      {selected && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
-          onClick={() => setSelected(null)}
-        >
-          <div
-            className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {selected.thumbnailUrl && (
-              <div className="aspect-video w-full bg-gray-100">
-                <img
-                  src={selected.thumbnailUrl}
-                  alt={selected.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <h2 className="text-xl font-bold text-gray-900">{selected.title}</h2>
-                  {selected.period && (
-                    <span className="text-xs text-gray-400 mt-0.5 block">{selected.period}</span>
-                  )}
-                </div>
-                <button
-                  onClick={() => setSelected(null)}
-                  className="p-1.5 text-gray-400 hover:text-gray-700 transition-colors"
-                >
-                  <X size={18} />
-                </button>
-              </div>
-              {selected.description && (
-                <p className="text-gray-600 text-sm leading-relaxed mb-4">{selected.description}</p>
-              )}
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {selected.tags.map((t) => (
-                  <span key={t} className="px-2.5 py-0.5 bg-gray-100 text-gray-600 text-xs rounded-full">
-                    {t}
-                  </span>
-                ))}
-              </div>
-              <div className="flex gap-3">
-                {selected.githubUrl && (
-                  <a
-                    href={selected.githubUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-full hover:bg-gray-700 transition-colors"
-                  >
-                    <Github size={14} /> GitHub
-                  </a>
-                )}
-                {selected.demoUrl && (
-                  <a
-                    href={selected.demoUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-full hover:bg-indigo-600 transition-colors"
-                  >
-                    <ExternalLink size={14} /> Demo
-                  </a>
-                )}
-              </div>
-            </div>
-          </div>
         </div>
       )}
     </div>

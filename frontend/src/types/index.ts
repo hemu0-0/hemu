@@ -40,6 +40,7 @@ export interface Project {
   period?: string;
   tags: string[];
   orderIndex: number;
+  imageUrls?: string[];
 }
 
 export interface ProjectRequest {
@@ -51,6 +52,22 @@ export interface ProjectRequest {
   period?: string;
   tags: string[];
   orderIndex: number;
+  imageUrls: string[];
+}
+
+export interface GuestbookEntry {
+  id: number;
+  name: string;
+  message: string;
+  secret: boolean;
+  createdAt: string;
+}
+
+export interface GuestbookRequest {
+  name: string;
+  password: string;
+  message: string;
+  secret: boolean;
 }
 
 export interface LoginRequest {

@@ -16,4 +16,5 @@ public class ProjectRequestDto {
     private String period;
     private Integer orderIndex;
     private List<String> tags;
+    private List<String> imageUrls;
 }
