@@ -21,27 +21,40 @@ public class DataSourceConfig {
 
     @Bean
     public DataSource dataSource() throws Exception {
+        String host, dbName, username, password;
+        int port;
+
         URI uri = new URI(databaseUrl);
-        String host = uri.getHost();
-        int port = uri.getPort();
-        String dbName = uri.getPath().replaceFirst("/", "");
-        String[] userInfo = uri.getUserInfo().split(":", 2);
-        String username = userInfo[0];
-        String password = userInfo[1];
+        String userInfo = uri.getUserInfo();
+
+        if (userInfo != null) {
+            // DATABASE_URL에 credentials 포함된 경우
+            String[] parts = userInfo.split(":", 2);
+            username = parts[0];
+            password = parts[1];
+            host = uri.getHost();
+            port = uri.getPort();
+            dbName = uri.getPath().replaceFirst("/", "");
+        } else {
+            // Railway 개별 환경변수로 fallback
+            log.warn("DATABASE_URL has no userInfo, falling back to PG* env vars");
+            host = System.getenv("PGHOST");
+            port = Integer.parseInt(System.getenv().getOrDefault("PGPORT", "5432"));
+            dbName = System.getenv("PGDATABASE");
+            username = System.getenv("PGUSER");
+            password = System.getenv("PGPASSWORD");
+        }
 
         String jdbcUrl = "jdbc:postgresql://" + host + ":" + port + "/" + dbName;
 
         if (host.endsWith(".railway.internal")) {
-            // 내부 네트워크: SSL 없음
             log.info("Using internal network (SSL disabled)");
             jdbcUrl = jdbcUrl + "?sslmode=disable";
         } else {
-            // 공개 URL: SSL 필요
             log.info("Using public network (SSL required)");
             jdbcUrl = jdbcUrl + "?sslmode=require";
         }
 
-        // 디버그용 로그 (비밀번호 제외)
         log.info("DB connecting → URL: {}, user: {}", jdbcUrl, username);
 
         HikariConfig config = new HikariConfig();
