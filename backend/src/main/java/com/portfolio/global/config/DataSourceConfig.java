@@ -31,6 +31,13 @@ public class DataSourceConfig {
         int port = 5432;
 
         Matcher m = DB_URL_PATTERN.matcher(databaseUrl.trim());
+        // 디버그: 어떤 DB 관련 환경변수가 존재하는지 이름만 출력
+        System.getenv().forEach((k, v) -> {
+            if (k.contains("PG") || k.contains("DATABASE") || k.contains("POSTGRES") || k.contains("DB")) {
+                log.info("ENV: {}={}", k, k.toLowerCase().contains("pass") || k.toLowerCase().contains("secret") ? "***" : v);
+            }
+        });
+
         if (m.matches() && m.group(1) != null) {
             // DATABASE_URL에 credentials 포함
             username = m.group(1);
