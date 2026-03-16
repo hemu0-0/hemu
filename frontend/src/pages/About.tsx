@@ -2,7 +2,7 @@ import { Github, Mail } from 'lucide-react';
 
 const skills = [
   { category: 'Frontend', items: ['React', 'TypeScript', 'Tailwind CSS', 'Vite'] },
-  { category: 'Backend', items: ['Java', 'Spring Boot', 'PostgreSQL', 'JPA'] },
+  { category: 'Backend', items: ['Java', 'Python', 'PostgreSQL', 'JPA'] },
   { category: 'DevOps', items: ['Git', 'Vercel', 'Railway', 'Docker'] },
 ];
 
@@ -13,7 +13,9 @@ export default function About() {
         <h1 className="text-4xl font-bold text-gray-900 mb-4">About Me</h1>
         <p className="text-gray-600 text-lg leading-relaxed">
           안녕하세요! 백엔드와 프론트엔드를 모두 다루는 풀스택 개발자입니다.
-          Java Spring Boot와 React를 주로 사용하며, 깔끔하고 유지보수하기 좋은 코드를 지향합니다.
+          Django와 Vue.js로 시작하여, 현재는 Java Spring Boot와 React를 사용할 수 있고, 
+          깔끔하고 유지보수하기 좋은 코드를 지향합니다.
+          Flutter를 사용한 모바일 앱 개발 경험도 있으며, 새로운 기술을 배우는 것을 즐깁니다.
         </p>
       </section>
 
