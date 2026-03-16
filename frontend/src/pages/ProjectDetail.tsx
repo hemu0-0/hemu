@@ -23,11 +23,6 @@ export default function ProjectDetail() {
   if (loading) return <Spinner className="py-40" />;
   if (!project) return null;
 
-  const allImages = [
-    ...(project.thumbnailUrl ? [project.thumbnailUrl] : []),
-    ...(project.imageUrls ?? []),
-  ];
-
   return (
     <div className="max-w-4xl mx-auto px-6 py-12">
       <button
