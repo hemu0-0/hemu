@@ -1,22 +1,32 @@
 import { useEffect } from 'react';
 
-export function useReveal() {
+export function useReveal(dep?: unknown) {
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
+    let observer: IntersectionObserver;
 
-    const elements = document.querySelectorAll('.reveal, .reveal-stagger');
-    elements.forEach((el) => observer.observe(el));
+    // React가 DOM을 커밋한 뒤에 실행되도록 소량 지연
+    const timer = setTimeout(() => {
+      observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.05 }
+      );
 
-    return () => observer.disconnect();
-  }, []);
+      document.querySelectorAll('.reveal, .reveal-stagger').forEach((el) => {
+        observer.observe(el);
+      });
+    }, 50);
+
+    return () => {
+      clearTimeout(timer);
+      if (observer) observer.disconnect();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dep]);
 }

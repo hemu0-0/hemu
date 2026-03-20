@@ -21,12 +21,14 @@ function anim(delay: number, dur = 0.65): React.CSSProperties {
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
-  useReveal();
+  const [projectsLoaded, setProjectsLoaded] = useState(false);
+  useReveal(projectsLoaded);
 
   useEffect(() => {
     getProjects()
       .then((data) => setProjects(Array.isArray(data) ? data.slice(0, 3) : []))
-      .catch(() => setProjects([]));
+      .catch(() => setProjects([]))
+      .finally(() => setProjectsLoaded(true));
   }, []);
 
   return (

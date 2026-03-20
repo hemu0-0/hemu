@@ -11,7 +11,7 @@ export default function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [hovered, setHovered] = useState<number | null>(null);
-  useReveal();
+  useReveal(loading);
 
   useEffect(() => {
     getProjects()
