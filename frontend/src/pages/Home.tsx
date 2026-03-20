@@ -81,7 +81,7 @@ export default function Home() {
             style={{ ...anim(0.25), fontSize: 'clamp(3.2rem, 8vw, 6.5rem)' }}
           >
             저는{' '}
-            <span className="gradient-text">hemu</span>
+            <span className="gradient-text">이화목</span>
             <br />
             입니다.
           </h1>
