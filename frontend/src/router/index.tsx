@@ -1,8 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import Home from '../pages/Home';
-import Blog from '../pages/Blog';
-import BlogDetail from '../pages/BlogDetail';
 import Projects from '../pages/Projects';
 import ProjectDetail from '../pages/ProjectDetail';
 import About from '../pages/About';
@@ -21,8 +19,8 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/blog" element={<Blog />} />
-      <Route path="/blog/:id" element={<BlogDetail />} />
+      <Route path="/blog" element={<Navigate to="/" replace />} />
+      <Route path="/blog/:id" element={<Navigate to="/" replace />} />
       <Route path="/projects" element={<Projects />} />
       <Route path="/projects/:id" element={<ProjectDetail />} />
       <Route path="/about" element={<About />} />
