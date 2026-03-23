@@ -274,7 +274,7 @@ export default function Home() {
             className="mb-10 max-w-sm mx-auto"
             style={{ color: 'var(--text-low)', fontSize: '1rem' }}
           >
-            새로운 기회나 협업 제안을 언제나 환영합니다.
+            피드백은 언제나 환영합니다.
           </p>
           <div className="flex justify-center flex-wrap gap-3">
             <a
@@ -304,7 +304,7 @@ export default function Home() {
           style={{ borderTop: '1px solid var(--border)' }}
         >
           <p className="text-xs" style={{ color: 'var(--text-xfaint)' }}>
-            © 2025. hemu0-0 All rights reserved.
+            © 2026. hemu0-0 All rights reserved.
           </p>
         </div>
       </section>
