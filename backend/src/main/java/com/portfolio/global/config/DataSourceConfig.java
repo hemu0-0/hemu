@@ -34,7 +34,9 @@ public class DataSourceConfig {
         // 디버그: 어떤 DB 관련 환경변수가 존재하는지 이름만 출력
         System.getenv().forEach((k, v) -> {
             if (k.contains("PG") || k.contains("DATABASE") || k.contains("POSTGRES") || k.contains("DB")) {
-                log.info("ENV: {}={}", k, k.toLowerCase().contains("pass") || k.toLowerCase().contains("secret") ? "***" : v);
+                String lowerKey = k.toLowerCase();
+                boolean sensitive = lowerKey.contains("pass") || lowerKey.contains("secret") || lowerKey.contains("url");
+                log.info("ENV: {}={}", k, sensitive ? "***" : v);
             }
         });
 
