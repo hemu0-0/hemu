@@ -44,6 +44,7 @@ public class ProjectService {
                 .thumbnailUrl(dto.getThumbnailUrl())
                 .githubUrl(dto.getGithubUrl())
                 .demoUrl(dto.getDemoUrl())
+                .figmaUrl(dto.getFigmaUrl())
                 .period(dto.getPeriod())
                 .orderIndex(dto.getOrderIndex())
                 .build();
@@ -57,7 +58,7 @@ public class ProjectService {
         Project project = projectRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Project not found: " + id));
         project.update(dto.getTitle(), dto.getDescription(), dto.getThumbnailUrl(),
-                dto.getGithubUrl(), dto.getDemoUrl(), dto.getPeriod(), dto.getOrderIndex(),
+                dto.getGithubUrl(), dto.getDemoUrl(), dto.getFigmaUrl(), dto.getPeriod(), dto.getOrderIndex(),
                 dto.getImageUrls());
         project.setTags(resolveTags(dto.getTags()));
         return new ProjectResponseDto(project);
