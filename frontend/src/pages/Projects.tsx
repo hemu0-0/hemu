@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink, Figma } from 'lucide-react';
 import { getProjects } from '../api/projectApi';
 import type { Project } from '../types';
 import Spinner from '../components/common/Spinner';
@@ -96,6 +96,17 @@ export default function Projects() {
                               <ExternalLink size={12} /> Demo
                             </a>
                           )}
+                          {project.figmaUrl && (
+                            <a
+                              href={project.figmaUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white text-gray-900 text-xs font-medium rounded-full hover:bg-gray-100 transition-colors"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Figma size={12} /> Figma
+                            </a>
+                          )}
                         </div>
                       </div>
                     </>
@@ -165,6 +176,18 @@ export default function Projects() {
                           onClick={(e) => e.stopPropagation()}
                         >
                           <ExternalLink size={14} /> Demo
+                        </a>
+                      )}
+                      {project.figmaUrl && (
+                        <a
+                          href={project.figmaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-sm transition-colors"
+                          style={{ color: 'var(--text-low)' }}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Figma size={14} /> Figma
                         </a>
                       )}
                     </div>

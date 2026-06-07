@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Github, ExternalLink, X, Calendar, Layers } from 'lucide-react';
+import { ArrowLeft, Github, ExternalLink, Figma, X, Calendar, Layers } from 'lucide-react';
 import MDEditor from '@uiw/react-md-editor';
 import { getProject } from '../api/projectApi';
 import type { Project } from '../types';
@@ -136,6 +136,21 @@ export default function ProjectDetail() {
                   style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent2))' }}
                 >
                   <ExternalLink size={14} /> Demo
+                </a>
+              )}
+              {project.figmaUrl && (
+                <a
+                  href={project.figmaUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-5 py-2.5 text-sm font-medium rounded-full transition-all hover:opacity-80"
+                  style={{
+                    background: 'var(--card-bg-2)',
+                    border: '1px solid var(--border)',
+                    color: 'var(--text-hi)',
+                  }}
+                >
+                  <Figma size={14} /> Figma
                 </a>
               )}
             </div>
