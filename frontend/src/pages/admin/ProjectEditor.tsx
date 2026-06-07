@@ -13,6 +13,7 @@ const emptyForm: ProjectRequest = {
   thumbnailUrl: '',
   githubUrl: '',
   demoUrl: '',
+  figmaUrl: '',
   period: '',
   tags: [],
   orderIndex: 0,
@@ -43,6 +44,7 @@ export default function ProjectEditor() {
           thumbnailUrl: project.thumbnailUrl || '',
           githubUrl: project.githubUrl || '',
           demoUrl: project.demoUrl || '',
+          figmaUrl: project.figmaUrl || '',
           period: project.period || '',
           tags: project.tags,
           orderIndex: project.orderIndex,
@@ -216,6 +218,7 @@ export default function ProjectEditor() {
         {[
           { label: 'GitHub URL (선택)', key: 'githubUrl' as const },
           { label: '데모 URL (선택)', key: 'demoUrl' as const },
+          { label: 'Figma URL (선택)', key: 'figmaUrl' as const },
           { label: '기간 (선택, ex: 2024.01 ~ 2024.03)', key: 'period' as const },
         ].map(({ label, key }) => (
           <div key={key}>
