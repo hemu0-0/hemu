@@ -38,6 +38,9 @@ public class Project {
     @Column(name = "demo_url", length = 500)
     private String demoUrl;
 
+    @Column(name = "figma_url", length = 500)
+    private String figmaUrl;
+
     @Column(length = 100)
     private String period;
 
@@ -64,24 +67,26 @@ public class Project {
 
     @Builder
     public Project(String title, String description, String thumbnailUrl,
-                   String githubUrl, String demoUrl, String period, Integer orderIndex) {
+                   String githubUrl, String demoUrl, String figmaUrl, String period, Integer orderIndex) {
         this.title = title;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
         this.githubUrl = githubUrl;
         this.demoUrl = demoUrl;
+        this.figmaUrl = figmaUrl;
         this.period = period;
         this.orderIndex = orderIndex != null ? orderIndex : 0;
     }
 
     public void update(String title, String description, String thumbnailUrl,
-                       String githubUrl, String demoUrl, String period, Integer orderIndex,
+                       String githubUrl, String demoUrl, String figmaUrl, String period, Integer orderIndex,
                        List<String> imageUrls) {
         this.title = title;
         this.description = description;
         this.thumbnailUrl = thumbnailUrl;
         this.githubUrl = githubUrl;
         this.demoUrl = demoUrl;
+        this.figmaUrl = figmaUrl;
         this.period = period;
         this.orderIndex = orderIndex != null ? orderIndex : 0;
         this.imageUrls = imageUrls != null ? imageUrls : new ArrayList<>();
