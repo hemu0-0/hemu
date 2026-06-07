@@ -37,6 +37,7 @@ export interface Project {
   thumbnailUrl?: string;
   githubUrl?: string;
   demoUrl?: string;
+  figmaUrl?: string;
   period?: string;
   tags: string[];
   orderIndex: number;
@@ -49,6 +50,7 @@ export interface ProjectRequest {
   thumbnailUrl?: string;
   githubUrl?: string;
   demoUrl?: string;
+  figmaUrl?: string;
   period?: string;
   tags: string[];
   orderIndex: number;
