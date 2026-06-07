@@ -13,6 +13,7 @@ public class ProjectRequestDto {
     private String thumbnailUrl;
     private String githubUrl;
     private String demoUrl;
+    private String figmaUrl;
     private String period;
     private Integer orderIndex;
     private List<String> tags;

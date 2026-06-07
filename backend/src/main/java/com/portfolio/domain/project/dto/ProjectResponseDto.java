@@ -14,6 +14,7 @@ public class ProjectResponseDto {
     private final String thumbnailUrl;
     private final String githubUrl;
     private final String demoUrl;
+    private final String figmaUrl;
     private final String period;
     private final Integer orderIndex;
     private final List<String> tags;
@@ -26,6 +27,7 @@ public class ProjectResponseDto {
         this.thumbnailUrl = project.getThumbnailUrl();
         this.githubUrl = project.getGithubUrl();
         this.demoUrl = project.getDemoUrl();
+        this.figmaUrl = project.getFigmaUrl();
         this.period = project.getPeriod();
         this.orderIndex = project.getOrderIndex();
         this.tags = project.getTags().stream()
